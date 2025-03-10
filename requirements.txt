@@ -1,0 +1,25 @@
+# Jupyter
+jupyter
+ipykernel
+
+# local packages
+-e .
+
+# Core packages
+numpy
+pandas
+matplotlib
+plotly
+seaborn
+scikit-learn
+xgboost
+lightgbm
+gym
+gymnasium
+torch
+torchvision
+optuna
+tqdm
+
+# AWS
+boto3
