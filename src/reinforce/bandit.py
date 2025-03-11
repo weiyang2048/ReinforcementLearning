@@ -1,3 +1,26 @@
+"""
+Multi-Armed Bandit Model Selection Module
+
+This module implements a multi-armed bandit approach to automate model selection
+for machine learning tasks. It uses an epsilon-greedy strategy to explore different
+model options and exploit the best performing ones over multiple episodes.
+
+The module includes:
+- Functions to evaluate different model selection actions
+- A multi-armed bandit algorithm implementation for model selection
+- Utility functions to run experiments and display results
+
+The bandit algorithm considers 5 possible actions:
+- 0: XGBoost
+- 1: LightGBM
+- 2: Random Forest
+- 3: Deep Neural Network
+- 4: Blend of all models
+
+Each model is evaluated based on AUC and KS metrics, with penalties applied
+to more complex models to balance performance and computational cost.
+"""
+
 import os
 import numpy as np
 import pandas as pd
@@ -6,6 +29,7 @@ from sklearn.metrics import roc_auc_score
 from model_selector.training import train_eval_model
 from model_selector.utils import calc_ks_score, blend_predictions
 import torch
+from data_loader.data_loader import download_data_from_s3, prepare_data
 
 
 def evaluate_action(action, X_train, X_val, y_train, y_val, device="cpu"):
@@ -206,9 +230,6 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"Error downloading file from S3: {e}")
 
-    data = pd.read_csv("rein_data_binary.csv")
-    X = data.drop("label", axis=1)
-    y = data["label"]
+    data = download_data_from_s3(bucket_name, file_name)
 
-    os.remove(file_name)
     run_bandit(data)
